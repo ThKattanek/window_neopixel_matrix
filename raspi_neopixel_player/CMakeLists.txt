@@ -9,11 +9,11 @@ string(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" VERSION_MICRO ${PROJECT_
 
 set(HEADERDEF "${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_MICRO}")
 
-project(rpi_ws281x VERSION ${PROJECT_VERSION})
+project(neopixel_player VERSION ${PROJECT_VERSION})
 
 set(CMAKE_C_STANDARD 11)
 
-set(TEST_TARGET neopixel_player)
+set(TEST_TARGET ${PROJECT_NAME})
 
 set(TEST_SOURCES
     main.c
@@ -25,3 +25,5 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(${TEST_TARGET} ${TEST_SOURCES})
 target_link_libraries(${TEST_TARGET} ws2811 m)
+
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
