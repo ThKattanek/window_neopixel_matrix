@@ -11,11 +11,9 @@ set(HEADERDEF "${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_MICRO}")
 
 project(rpi_ws281x VERSION ${PROJECT_VERSION})
 
-option(BUILD_TEST "Build test application" ON)
-
 set(CMAKE_C_STANDARD 11)
 
-set(TEST_TARGET test)
+set(TEST_TARGET neopixel_player)
 
 set(TEST_SOURCES
     main.c
@@ -23,9 +21,7 @@ set(TEST_SOURCES
 
 configure_file(version.h.in version.h)
 
-if(BUILD_TEST)
-    include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-    add_executable(${TEST_TARGET} ${TEST_SOURCES})
-    target_link_libraries(${TEST_TARGET} ws2811 m)
-endif()
+add_executable(${TEST_TARGET} ${TEST_SOURCES})
+target_link_libraries(${TEST_TARGET} ws2811 m)
