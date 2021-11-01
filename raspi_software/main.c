@@ -27,7 +27,6 @@
  *
  */
 
-
 static char VERSION[] = "XX.YY.ZZ";
 
 #include <stdint.h>
@@ -43,14 +42,14 @@ static char VERSION[] = "XX.YY.ZZ";
 #include <stdarg.h>
 #include <getopt.h>
 
+#include <ws2811/clk.h>
+#include <ws2811/gpio.h>
+#include <ws2811/dma.h>
+#include <ws2811/pwm.h>
 
-#include "clk.h"
-#include "gpio.h"
-#include "dma.h"
-#include "pwm.h"
 #include "version.h"
 
-#include "ws2811.h"
+#include <ws2811/ws2811.h>
 
 
 #define ARRAY_SIZE(stuff)       (sizeof(stuff) / sizeof(stuff[0]))
