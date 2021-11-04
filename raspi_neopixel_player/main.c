@@ -62,8 +62,8 @@ static char VERSION[] = "XX.YY.ZZ";
 #define STRIP_TYPE              WS2811_STRIP_GBR		// WS2812/SK6812RGB integrated chip+leds
 //#define STRIP_TYPE            SK6812_STRIP_RGBW		// SK6812RGBW (NOT SK6812RGB)
 
-#define WIDTH                   8
-#define HEIGHT                  8
+#define WIDTH                   25
+#define HEIGHT                  30
 #define LED_COUNT               (WIDTH * HEIGHT)
 
 int width = WIDTH;
@@ -100,30 +100,16 @@ ws2811_led_t *matrix;
 
 static uint8_t running = 1;
 
-void matrix_render(void)
+void matrix_to_leds(void)
 {
+
 	int x, y;
 
 	for (x = 0; x < width; x++)
 	{
 		for (y = 0; y < height; y++)
 		{
-			ledstring.channel[0].leds[(y * width) + x] = matrix[y * width + x];
-		}
-	}
-}
-
-void matrix_raise(void)
-{
-	int x, y;
-
-	for (y = 0; y < (height - 1); y++)
-	{
-		for (x = 0; x < width; x++)
-		{
-			// This is for the 8x8 Pimoroni Unicorn-HAT where the LEDS in subsequent
-			// rows are arranged in opposite directions
-			matrix[y * width + x] = matrix[(y + 1)*width + width - x - 1];
+			ledstring.channel[0].leds[(y * width) + x] = matrix[(y * width) + x];
 		}
 	}
 }
@@ -136,53 +122,7 @@ void matrix_clear(void)
 	{
 		for (x = 0; x < width; x++)
 		{
-			matrix[y * width + x] = 0;
-		}
-	}
-}
-
-int dotspos[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-ws2811_led_t dotcolors[] =
-{
-	0x00200000,  // red
-	0x00201000,  // orange
-	0x00202000,  // yellow
-	0x00002000,  // green
-	0x00002020,  // lightblue
-	0x00000020,  // blue
-	0x00100010,  // purple
-	0x00200010,  // pink
-};
-
-ws2811_led_t dotcolors_rgbw[] =
-{
-	0x00200000,  // red
-	0x10200000,  // red + W
-	0x00002000,  // green
-	0x10002000,  // green + W
-	0x00000020,  // blue
-	0x10000020,  // blue + W
-	0x00101010,  // white
-	0x10101010,  // white + W
-
-};
-
-void matrix_bottom(void)
-{
-	int i;
-
-	for (i = 0; i < (int)(ARRAY_SIZE(dotspos)); i++)
-	{
-		dotspos[i]++;
-		if (dotspos[i] > (width - 1))
-		{
-			dotspos[i] = 0;
-		}
-
-		if (ledstring.channel[0].strip_type == SK6812_STRIP_RGBW) {
-			matrix[dotspos[i] + (height - 1) * width] = dotcolors_rgbw[i];
-		} else {
-			matrix[dotspos[i] + (height - 1) * width] = dotcolors[i];
+			matrix[y * width + x] = 0x00000000;
 		}
 	}
 }
@@ -370,6 +310,9 @@ void parseargs(int argc, char **argv, ws2811_t *ws2811)
 	}
 }
 
+void matrix_render()
+{
+}
 
 int main(int argc, char *argv[])
 {
@@ -380,6 +323,7 @@ int main(int argc, char *argv[])
 	parseargs(argc, argv, &ledstring);
 
 	matrix = malloc(sizeof(ws2811_led_t) * width * height);
+	matrix_clear();
 
 	setup_handlers();
 
@@ -391,10 +335,8 @@ int main(int argc, char *argv[])
 
 	while (running)
 	{
-		matrix_raise();
-		matrix_bottom();
 		matrix_render();
-
+		matrix_to_leds();
 		if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
 		{
 			fprintf(stderr, "ws2811_render failed: %s\n", ws2811_get_return_t_str(ret));
@@ -402,13 +344,15 @@ int main(int argc, char *argv[])
 		}
 
 		// 15 frames /sec
-		usleep(1000000 / 15);
+		usleep(1000000 / 50);
 	}
 
 	if (clear_on_exit) {
+
 	matrix_clear();
 	matrix_render();
 	ws2811_render(&ledstring);
+
 	}
 
 	ws2811_fini(&ledstring);
