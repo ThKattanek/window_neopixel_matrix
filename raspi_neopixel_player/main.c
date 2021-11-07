@@ -62,8 +62,8 @@ static char VERSION[] = "XX.YY.ZZ";
 #define STRIP_TYPE              WS2811_STRIP_GBR		// WS2812/SK6812RGB integrated chip+leds
 //#define STRIP_TYPE            SK6812_STRIP_RGBW		// SK6812RGBW (NOT SK6812RGB)
 
-#define WIDTH                   25
-#define HEIGHT                  30
+#define WIDTH                   300
+#define HEIGHT                  1
 #define LED_COUNT               (WIDTH * HEIGHT)
 
 int width = WIDTH;
@@ -122,7 +122,7 @@ void matrix_clear(void)
 	{
 		for (x = 0; x < width; x++)
 		{
-			matrix[y * width + x] = 0x00000000;
+			matrix[y * width + x] = 0x000000ff;
 		}
 	}
 }
@@ -310,8 +310,46 @@ void parseargs(int argc, char **argv, ws2811_t *ws2811)
 	}
 }
 
+void matrix_init()
+{
+	int c = 0;
+	int b = 0;
+	for(int i=0; i<LED_COUNT; i++)
+	{
+		switch(b)
+		{
+		case 0:
+			matrix[i] = 0x0000ff00;
+			break;
+		case 1:
+			matrix[i] = 0x000000ff;
+			break;
+		case 2:
+			matrix[i] = 0x00ff0000;
+			break;
+		default:
+			break;
+		}
+
+		c++;
+		if(c == 5)
+		{
+			b++;
+			if(b == 3) b = 0;
+			c = 0;
+		}
+	}
+}
+
 void matrix_render()
 {
+	ws2811_led_t tmp = matrix[0];
+
+	for(int i=0; i<LED_COUNT; i++)
+	{
+		matrix[i] = matrix[i+1];
+	}
+	matrix[LED_COUNT-1] = tmp;
 }
 
 int main(int argc, char *argv[])
@@ -323,7 +361,7 @@ int main(int argc, char *argv[])
 	parseargs(argc, argv, &ledstring);
 
 	matrix = malloc(sizeof(ws2811_led_t) * width * height);
-	matrix_clear();
+	matrix_init();
 
 	setup_handlers();
 
@@ -344,7 +382,7 @@ int main(int argc, char *argv[])
 		}
 
 		// 15 frames /sec
-		usleep(1000000 / 50);
+		usleep(1000000 / 30);
 	}
 
 	if (clear_on_exit) {
