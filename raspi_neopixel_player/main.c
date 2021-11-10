@@ -382,7 +382,7 @@ int main(int argc, char *argv[])
 		}
 
 		// 15 frames /sec
-		usleep(1000000 / 25);
+		usleep(1000000 / 50);
 	}
 
 	if (clear_on_exit) {
