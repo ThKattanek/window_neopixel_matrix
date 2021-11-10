@@ -62,8 +62,8 @@ static char VERSION[] = "XX.YY.ZZ";
 #define STRIP_TYPE              WS2811_STRIP_GBR		// WS2812/SK6812RGB integrated chip+leds
 //#define STRIP_TYPE            SK6812_STRIP_RGBW		// SK6812RGBW (NOT SK6812RGB)
 
-#define WIDTH                   300
-#define HEIGHT                  1
+#define WIDTH                   25
+#define HEIGHT                  30
 #define LED_COUNT               (WIDTH * HEIGHT)
 
 int width = WIDTH;
@@ -382,7 +382,7 @@ int main(int argc, char *argv[])
 		}
 
 		// 15 frames /sec
-		usleep(1000000 / 30);
+		usleep(1000000 / 25);
 	}
 
 	if (clear_on_exit) {
