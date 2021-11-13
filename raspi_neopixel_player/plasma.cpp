@@ -29,13 +29,13 @@ void Plasma::Init()
 	/* create palette */
 	for (int i = 0; i < 64; ++i)
 	  {
-		colors[i] = (i << 2) << 24;	// red
-		colors[i] |= (255 - ((i << 2) + 1)) << 16;	// green
-		colors[i+64] = 255 << 24;	// red
-		colors[i+64] |= ((i << 2) + 1) << 16; // green
-		colors[i+128] = (255 - ((i << 2) + 1)) << 24;	// red
-		colors[i+128] |= (255 - ((i << 2) + 1)) << 16;	// green
-		colors[i+192] = ((i << 2) + 1) << 16; // green
+		colors[i] = (i << 2);	// red
+		colors[i] |= (255 - ((i << 2) + 1)) << 8;	// green
+		colors[i+64] = 255 ;	// red
+		colors[i+64] |= ((i << 2) + 1) << 8; // green
+		colors[i+128] = (255 - ((i << 2) + 1)) ;	// red
+		colors[i+128] |= (255 - ((i << 2) + 1)) << 8;	// green
+		colors[i+192] = ((i << 2) + 1) << 8; // green
 	  }
 }
 
