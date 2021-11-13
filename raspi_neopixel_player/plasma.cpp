@@ -68,12 +68,12 @@ void Plasma::Render()
 
 			*buffer++ = colors[index & 0xff];
 
-			tpos1 += 5;
-			tpos2 += 3;
+			tpos1 += 15;
+			tpos2 += 13;
 		}
 
-		tpos4 += 3;
-		tpos3 += 1;
+		tpos4 += 13;
+		tpos3 += 11;
 	}
 
 	pos1 +=9;
