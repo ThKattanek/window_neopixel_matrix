@@ -12,11 +12,12 @@ set(HEADERDEF "${VERSION_MAJOR}_${VERSION_MINOR}_${VERSION_MICRO}")
 project(neopixel_player VERSION ${PROJECT_VERSION})
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 
 set(TEST_TARGET ${PROJECT_NAME})
 
 set(TEST_SOURCES
-    main.c
+    main.cpp plasma.cpp
 )
 
 configure_file(version.h.in version.h)

@@ -51,6 +51,8 @@ static char VERSION[] = "XX.YY.ZZ";
 
 #include <ws2811/ws2811.h>
 
+// effects
+#include "./plasma.h"
 
 #define ARRAY_SIZE(stuff)       (sizeof(stuff) / sizeof(stuff[0]))
 
@@ -80,18 +82,21 @@ ws2811_t ledstring =
 	{
 		[0] =
 		{
-			.gpionum = GPIO_PIN,
-			.count = LED_COUNT,
-			.invert = 0,
-			.brightness = 255,
-			.strip_type = STRIP_TYPE,
+			GPIO_PIN,
+            0,
+            LED_COUNT,
+            STRIP_TYPE,
+            nullptr,
+			255
 		},
 		[1] =
 		{
-			.gpionum = 0,
-			.count = 0,
-			.invert = 0,
-			.brightness = 0,
+			0,
+            0,
+			0,
+            0,
+            0,
+			0
 		},
 	},
 };
@@ -135,6 +140,7 @@ static void ctrl_c_handler(int signum)
 
 static void setup_handlers(void)
 {
+    /*
 	struct sigaction sa =
 	{
 		.sa_handler = ctrl_c_handler,
@@ -142,6 +148,7 @@ static void setup_handlers(void)
 
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGTERM, &sa, NULL);
+	*/
 }
 
 
@@ -310,48 +317,6 @@ void parseargs(int argc, char **argv, ws2811_t *ws2811)
 	}
 }
 
-void matrix_init()
-{
-	int c = 0;
-	int b = 0;
-	for(int i=0; i<LED_COUNT; i++)
-	{
-		switch(b)
-		{
-		case 0:
-			matrix[i] = 0x0000ff00;
-			break;
-		case 1:
-			matrix[i] = 0x000000ff;
-			break;
-		case 2:
-			matrix[i] = 0x00ff0000;
-			break;
-		default:
-			break;
-		}
-
-		c++;
-		if(c == 5)
-		{
-			b++;
-			if(b == 3) b = 0;
-			c = 0;
-		}
-	}
-}
-
-void matrix_render()
-{
-	ws2811_led_t tmp = matrix[0];
-
-	for(int i=0; i<LED_COUNT; i++)
-	{
-		matrix[i] = matrix[i+1];
-	}
-	matrix[LED_COUNT-1] = tmp;
-}
-
 int main(int argc, char *argv[])
 {
 	ws2811_return_t ret;
@@ -360,8 +325,7 @@ int main(int argc, char *argv[])
 
 	parseargs(argc, argv, &ledstring);
 
-	matrix = malloc(sizeof(ws2811_led_t) * width * height);
-	matrix_init();
+	matrix = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * width * height);
 
 	setup_handlers();
 
@@ -370,10 +334,15 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "ws2811_init failed: %s\n", ws2811_get_return_t_str(ret));
 		return ret;
 	}
+	
+	// init effects
+	Plasma plasma(WIDTH, HEIGHT, matrix);
 
 	while (running)
 	{
-		matrix_render();
+		// render effects
+        plasma.Render();
+        
 		matrix_to_leds();
 		if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
 		{
@@ -388,7 +357,6 @@ int main(int argc, char *argv[])
 	if (clear_on_exit) {
 
 	matrix_clear();
-	matrix_render();
 	ws2811_render(&ledstring);
 
 	}
