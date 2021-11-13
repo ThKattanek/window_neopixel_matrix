@@ -1,5 +1,7 @@
 #include "plasma.h"
 
+#include <math.h>
+
 Plasma::Plasma(int xw, int yw, uint32_t *buffer)
 {
 	this->xw = xw;
@@ -15,43 +17,65 @@ Plasma::~Plasma()
 
 void Plasma::Init()
 {
-	int c = 0;
-	int b = 0;
+	float rad;
 
-	for(int i=0; i<led_count; i++)
+	/*create sin lookup table */
+	for (int i = 0; i < 512; i++)
 	{
-		switch(b)
-		{
-		case 0:
-			buffer[i] = 0x0000ff00;
-			break;
-		case 1:
-			buffer[i] = 0x000000ff;
-			break;
-		case 2:
-			buffer[i] = 0x00ff0000;
-			break;
-		default:
-			break;
-		}
-
-		c++;
-		if(c == 5)
-		{
-			b++;
-			if(b == 3) b = 0;
-			c = 0;
-		}
+		rad =  ((float)i * 0.703125) * 0.0174532; /* 360 / 512 * degree to rad, 360 degrees spread over 512 values to be able to use AND 512-1 instead of using modulo 360*/
+		aSin[i] = sin(rad) * 1024; /*using fixed point math with 1024 as base*/
 	}
+
+	/* create palette */
+	for (int i = 0; i < 64; ++i)
+	  {
+		colors[i] = (i << 2) << 24;	// red
+		colors[i] |= (255 - ((i << 2) + 1)) << 16;	// green
+		colors[i+64] = 255 << 24;	// red
+		colors[i+64] |= ((i << 2) + 1) << 16; // green
+		colors[i+128] = (255 - ((i << 2) + 1)) << 24;	// red
+		colors[i+128] |= (255 - ((i << 2) + 1)) << 16;	// green
+		colors[i+192] = ((i << 2) + 1) << 16; // green
+	  }
 }
 
 void Plasma::Render()
 {
-	uint32_t tmp = buffer[0];
+	uint32_t *buffer = this->buffer;
 
-	for(int i=0; i<led_count; i++)
+	uint8_t index;
+	int x;
+
+	tpos4 = pos4;
+	tpos3 = pos3;
+
+	for (int i = 0; i < yw; ++i)
 	{
-		buffer[i] = buffer[i+1];
+		tpos1 = pos1 + 5;
+		tpos2 = pos2 + 3;
+
+		tpos3 &= 511;
+		tpos4 &= 511;
+
+		for (int j = 0; j < xw; ++j)
+		{
+			tpos1 &= 511;
+			tpos2 &= 511;
+
+			x = aSin[tpos1] + aSin[tpos2] + aSin[tpos3] + aSin[tpos4]; /*actual plasma calculation*/
+
+			index = 128 + (x >> 4); /*fixed point multiplication but optimized so basically it says (x * (64 * 1024) / (1024 * 1024)), x is already multiplied by 1024*/
+
+			*buffer++ = colors[index & 0xff];
+
+			tpos1 += 5;
+			tpos2 += 3;
+		}
+
+		tpos4 += 3;
+		tpos3 += 1;
 	}
-	buffer[led_count-1] = tmp;
+
+	pos1 +=9;
+	pos3 +=8;
 }
