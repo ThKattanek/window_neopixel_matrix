@@ -44,12 +44,12 @@ void Plasma::Render()
 	uint32_t *buffer = this->buffer;
 
 	uint8_t index;
-	int x;
+	int i;
 
 	tpos4 = pos4;
 	tpos3 = pos3;
 
-	for (int i = 0; i < yw; ++i)
+	for (int y = 0; y < yw; ++y)
 	{
 		tpos1 = pos1 + 5;
 		tpos2 = pos2 + 3;
@@ -57,14 +57,14 @@ void Plasma::Render()
 		tpos3 &= 511;
 		tpos4 &= 511;
 
-		for (int j = 0; j < xw; ++j)
+		for (int x = 0; x < xw; ++x)
 		{
 			tpos1 &= 511;
 			tpos2 &= 511;
 
-			x = aSin[tpos1] + aSin[tpos2] + aSin[tpos3] + aSin[tpos4]; /*actual plasma calculation*/
+			i = aSin[tpos1] + aSin[tpos2] + aSin[tpos3] + aSin[tpos4]; /*actual plasma calculation*/
 
-			index = 128 + (x >> 4); /*fixed point multiplication but optimized so basically it says (x * (64 * 1024) / (1024 * 1024)), x is already multiplied by 1024*/
+			index = 128 + (i >> 4); /*fixed point multiplication but optimized so basically it says (x * (64 * 1024) / (1024 * 1024)), x is already multiplied by 1024*/
 
 			*buffer++ = colors[index & 0xff];
 
