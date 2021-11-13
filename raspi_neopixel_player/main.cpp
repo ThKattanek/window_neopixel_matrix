@@ -74,7 +74,32 @@ int led_count = LED_COUNT;
 
 int clear_on_exit = 0;
 
-ws2811_t ledstring;
+ws2811_t ledstring =
+{
+	.freq = TARGET_FREQ,
+	.dmanum = DMA,
+	.channel =
+	{
+		[0] =
+		{
+			GPIO_PIN,
+            0,
+            LED_COUNT,
+            STRIP_TYPE,
+            nullptr,
+			255
+		},
+		[1] =
+		{
+			0,
+            0,
+			0,
+            0,
+            0,
+			0
+		},
+	},
+};
 
 ws2811_led_t *matrix;
 
@@ -298,19 +323,6 @@ int main(int argc, char *argv[])
 
 	sprintf(VERSION, "%d.%d.%d", VERSION_MAJOR, VERSION_MINOR, VERSION_MICRO);
 
-    ledstring.freq = TARGET_FREQ;
-    ledstring.dmanum = DMA;
-    ledstring.channel[0].gpionum = GPIO_PIN;
-    ledstring.channel[0].count = LED_COUNT;
-    ledstring.channel[0].invert = 0;
-    ledstring.channel[0].brightness = 255;
-    ledstring.channel[0].strip_type = STRIP_TYPE;
-    
-    ledstring.channel[1].gpionum = 0;
-    ledstring.channel[1].count = 0;
-    ledstring.channel[1].invert = 0;
-    ledstring.channel[1].brightness = 0;
-
 	parseargs(argc, argv, &ledstring);
 
 	matrix = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * width * height);
@@ -325,6 +337,7 @@ int main(int argc, char *argv[])
 	
 	// init effects
 	Plasma plasma(WIDTH, HEIGHT, matrix);
+    plasma.Init();
 
 	while (running)
 	{
