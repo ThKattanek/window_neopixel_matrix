@@ -102,8 +102,43 @@ ws2811_t ledstring =
 };
 
 ws2811_led_t *matrix;
+ws2811_led_t *buffer;
 
 static uint8_t running = 1;
+
+void buffer_to_matrix()
+{
+	int x = WIDTH-1;
+	int y = HEIGHT-1;
+
+	bool y_direction = false;
+
+	for(int i=0; i<LED_COUNT; i++)
+	{
+		matrix[i] = buffer[y*WIDTH+x];
+
+		if(y_direction)
+		{
+			y++;
+			if(y>=HEIGHT)
+			{
+				y=HEIGHT-1;
+				x--;
+				y_direction = false;
+			}
+		}
+		else
+		{
+			y--;
+			if(y<0)
+			{
+				y=0;
+				x--;
+				y_direction = true;
+			}
+		}
+	}
+}
 
 void matrix_to_leds(void)
 {
@@ -325,6 +360,7 @@ int main(int argc, char *argv[])
 
 	parseargs(argc, argv, &ledstring);
 
+	buffer = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * width * height);
 	matrix = (ws2811_led_t*)malloc(sizeof(ws2811_led_t) * width * height);
 
 	setup_handlers();
@@ -336,14 +372,15 @@ int main(int argc, char *argv[])
 	}
 	
 	// init effects
-	Plasma plasma(WIDTH, HEIGHT, matrix);
+	Plasma plasma(WIDTH, HEIGHT, buffer);
     plasma.Init();
 
 	while (running)
 	{
 		// render effects
         plasma.Render();
-        
+
+		buffer_to_matrix();
 		matrix_to_leds();
 		if ((ret = ws2811_render(&ledstring)) != WS2811_SUCCESS)
 		{
