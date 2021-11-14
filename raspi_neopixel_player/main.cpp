@@ -95,7 +95,7 @@ ws2811_t ledstring =
             LED_COUNT,
             STRIP_TYPE,
             nullptr,
-			150
+			50
 		},
 		[1] =
 		{
