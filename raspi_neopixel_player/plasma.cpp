@@ -76,6 +76,6 @@ void Plasma::Render()
 		tpos3 += 11;
 	}
 
-	pos1 +=9;
-	pos3 +=8;
+	pos1 +=6;
+	pos3 +=4;
 }
