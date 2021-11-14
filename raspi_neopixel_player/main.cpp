@@ -68,12 +68,19 @@ static char VERSION[] = "XX.YY.ZZ";
 #define WIDTH                   25
 #define HEIGHT                  30
 #define LED_COUNT               (WIDTH * HEIGHT)
+#define EFFECT_TIME		10		// for 10sek
+#define FPS			50	// 50 Frame per second
 
 int width = WIDTH;
 int height = HEIGHT;
 int led_count = LED_COUNT;
 
 int clear_on_exit = 0;
+
+enum effects{PLASMA, COMETRAIN, EFFECT_COUNT};
+
+int current_effect = PLASMA;
+int effect_time_counter = EFFECT_TIME * FPS;
 
 ws2811_t ledstring =
 {
@@ -88,7 +95,7 @@ ws2811_t ledstring =
             LED_COUNT,
             STRIP_TYPE,
             nullptr,
-			255
+			150
 		},
 		[1] =
 		{
@@ -392,8 +399,26 @@ int main(int argc, char *argv[])
 		buffer_clear();
 
 		// render effects
-		//plasma.Render();
-		cometrain.Render();
+
+		switch(current_effect)
+		{
+			case PLASMA:
+				plasma.Render();
+			break;
+
+			case COMETRAIN:
+				cometrain.Render();
+			break;
+		}
+
+		effect_time_counter--;
+		if(effect_time_counter == 0)
+		{
+			effect_time_counter = EFFECT_TIME * FPS;
+			current_effect++;
+			if(current_effect == EFFECT_COUNT)
+				current_effect = PLASMA;
+		}
 
 		buffer_to_matrix();
 		matrix_to_leds();
@@ -404,7 +429,7 @@ int main(int argc, char *argv[])
 		}
 
 		// 15 frames /sec
-		usleep(1000000 / 50);
+		usleep(1000000 / FPS);
 	}
 
 	if (clear_on_exit) {
