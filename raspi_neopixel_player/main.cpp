@@ -53,6 +53,7 @@ static char VERSION[] = "XX.YY.ZZ";
 
 // effects
 #include "./plasma.h"
+#include "./cometrain.h"
 
 #define ARRAY_SIZE(stuff)       (sizeof(stuff) / sizeof(stuff[0]))
 
@@ -105,6 +106,14 @@ ws2811_led_t *matrix;
 ws2811_led_t *buffer;
 
 static uint8_t running = 1;
+
+void buffer_clear()
+{
+	for(int i=0; i<LED_COUNT; i++)
+	{
+		buffer[i] = 0x00000000;
+	}
+}
 
 void buffer_to_matrix()
 {
@@ -375,10 +384,16 @@ int main(int argc, char *argv[])
 	Plasma plasma(WIDTH, HEIGHT, buffer);
     plasma.Init();
 
+	Cometrain cometrain(WIDTH, HEIGHT, buffer);
+	cometrain.Init();
+
 	while (running)
 	{
+		buffer_clear();
+
 		// render effects
-        plasma.Render();
+		//plasma.Render();
+		cometrain.Render();
 
 		buffer_to_matrix();
 		matrix_to_leds();
