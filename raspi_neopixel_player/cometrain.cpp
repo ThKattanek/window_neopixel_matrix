@@ -67,6 +67,13 @@ bool Cometrain::DrawComet(comet &c)
 		g1 = g * f * (c.len - i);
 		b1 = b * f * (c.len - i);
 
+		if(i>0)
+		{
+			r1 *= 0.4f;
+			g1 *= 0.4f;
+			b1 *= 0.4f;
+		}
+
 		color = r1 | g1 << 8 | b1 << 16;
 
 		DrawPixel(c.posx, c.posy - i, color);
