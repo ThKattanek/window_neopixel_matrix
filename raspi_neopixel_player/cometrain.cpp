@@ -69,9 +69,9 @@ bool Cometrain::DrawComet(comet &c)
 
 		if(i>0)
 		{
-			r1 *= 0.4f;
-			g1 *= 0.4f;
-			b1 *= 0.4f;
+			r1 *= 0.2f;
+			g1 *= 0.2f;
+			b1 *= 0.2f;
 		}
 
 		color = r1 | g1 << 8 | b1 << 16;
