@@ -412,6 +412,7 @@ int main(int argc, char *argv[])
 
 		case COMETRAIN:
 			cometrain.Render();
+			break;
 
 		case PICTURESHOW:
 			pictureshow.Render();
