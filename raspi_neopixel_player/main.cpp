@@ -54,6 +54,7 @@ static char VERSION[] = "XX.YY.ZZ";
 // effects
 #include "./plasma.h"
 #include "./cometrain.h"
+#include "./pictureshow.h"
 
 #define ARRAY_SIZE(stuff)       (sizeof(stuff) / sizeof(stuff[0]))
 
@@ -77,7 +78,7 @@ int led_count = LED_COUNT;
 
 int clear_on_exit = 0;
 
-enum effects{PLASMA, COMETRAIN, EFFECT_COUNT};
+enum effects{PLASMA, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
 
 int current_effect = PLASMA;
 int effect_time_counter = EFFECT_TIME * FPS;
@@ -95,7 +96,7 @@ ws2811_t ledstring =
             LED_COUNT,
             STRIP_TYPE,
             nullptr,
-			50
+			255
 		},
 		[1] =
 		{
@@ -394,6 +395,9 @@ int main(int argc, char *argv[])
 	Cometrain cometrain(WIDTH, HEIGHT, buffer);
 	cometrain.Init();
 
+	PictureShow pictureshow(WIDTH, HEIGHT, buffer);
+	pictureshow.LoadPNG("/home/pi/neopixel_images/test.png");
+
 	while (running)
 	{
 		buffer_clear();
@@ -402,12 +406,15 @@ int main(int argc, char *argv[])
 
 		switch(current_effect)
 		{
-			case PLASMA:
-				plasma.Render();
+		case PLASMA:
+			plasma.Render();
 			break;
 
-			case COMETRAIN:
-				cometrain.Render();
+		case COMETRAIN:
+			cometrain.Render();
+
+		case PICTURESHOW:
+			pictureshow.Render();
 			break;
 		}
 
