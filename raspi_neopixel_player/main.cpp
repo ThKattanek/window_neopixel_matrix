@@ -69,7 +69,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #define WIDTH                   25
 #define HEIGHT                  30
 #define LED_COUNT               (WIDTH * HEIGHT)
-#define EFFECT_TIME		4		// for 4sek
+#define EFFECT_TIME		20// for 20sek
 #define FPS			50	// 50 Frame per second
 
 int width = WIDTH;
@@ -396,7 +396,7 @@ int main(int argc, char *argv[])
 	cometrain.Init();
 
 	PictureShow pictureshow(WIDTH, HEIGHT, buffer);
-	pictureshow.LoadPNG("/home/pi/neopixel_images/baum2.png");
+	pictureshow.LoadPNG("/home/pi/neopixel_images/baum3.png");
 
 	while (running)
 	{

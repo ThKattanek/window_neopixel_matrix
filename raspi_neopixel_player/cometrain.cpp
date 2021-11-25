@@ -42,7 +42,7 @@ void Cometrain::BornComet(comet &c)
 	c.life = 1.0f;
 	c.life_speed = ((rand() % 5) + 1) / 100.0f;
 	c.len = (rand() % 5) + 5;
-	c.speed = ((rand() % 2) + 1) - 0.5f;
+	c.speed = (((rand() % 2) + 1) - 0.5f) * 0.5f;
 	c.dead = false;
 }
 
