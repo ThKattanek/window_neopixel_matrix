@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(TEST_TARGET ${PROJECT_NAME})
 
 set(TEST_SOURCES
-    main.cpp plasma.cpp cometrain.cpp pictureshow.cpp
+    main.cpp plasma.cpp cometrain.cpp pictureshow.cpp fire.cpp
 )
 
 configure_file(version.h.in version.h)

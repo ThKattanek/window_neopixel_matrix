@@ -55,6 +55,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #include "./plasma.h"
 #include "./cometrain.h"
 #include "./pictureshow.h"
+#include "./fire.h"
 
 #define ARRAY_SIZE(stuff)       (sizeof(stuff) / sizeof(stuff[0]))
 
@@ -78,7 +79,7 @@ int led_count = LED_COUNT;
 
 int clear_on_exit = 0;
 
-enum effects{PLASMA, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
+enum effects{PLASMA, FIRE, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
 
 int current_effect = PLASMA;
 int effect_time_counter = EFFECT_TIME * FPS;
@@ -398,6 +399,9 @@ int main(int argc, char *argv[])
 	PictureShow pictureshow(WIDTH, HEIGHT, buffer);
 	pictureshow.LoadPNG("/home/pi/neopixel_images/baum3.png");
 
+	Fire fire(WIDTH, HEIGHT, buffer);
+	fire.Init();
+
 	while (running)
 	{
 		buffer_clear();
@@ -416,6 +420,9 @@ int main(int argc, char *argv[])
 
 		case PICTURESHOW:
 			pictureshow.Render();
+			break;
+		case FIRE:
+			fire.Render();
 			break;
 		}
 
