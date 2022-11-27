@@ -80,7 +80,7 @@ int led_count = LED_COUNT;
 
 int clear_on_exit = 0;
 
-enum effects{PLASMA, FIRE, COMETRAIN, PICTURESHOW, PIXELTEST, EFFECT_COUNT};
+enum effects{PLASMA, FIRE, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
 
 int current_effect = PIXELTEST;
 int effect_time_counter = EFFECT_TIME * FPS;
