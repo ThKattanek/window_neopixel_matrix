@@ -80,9 +80,9 @@ int led_count = LED_COUNT;
 
 int clear_on_exit = 0;
 
-enum effects{PLASMA, FIRE, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
+enum effects{PIXELTEST, PLASMA, FIRE, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
 
-int current_effect = PIXELTEST;
+int current_effect = PLASMA;
 int effect_time_counter = EFFECT_TIME * FPS;
 
 ws2811_t ledstring =
