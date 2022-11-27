@@ -71,7 +71,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #define WIDTH                   25
 #define HEIGHT                  30
 #define LED_COUNT               (WIDTH * HEIGHT)
-#define EFFECT_TIME		5// for 20sek
+#define EFFECT_TIME		20// for 20sek
 #define FPS			50	// 50 Frame per second
 
 int width = WIDTH;
