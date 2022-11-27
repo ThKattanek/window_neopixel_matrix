@@ -56,6 +56,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #include "./cometrain.h"
 #include "./pictureshow.h"
 #include "./fire.h"
+#include "./pixeltest.h"
 
 #define ARRAY_SIZE(stuff)       (sizeof(stuff) / sizeof(stuff[0]))
 
@@ -70,7 +71,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #define WIDTH                   25
 #define HEIGHT                  30
 #define LED_COUNT               (WIDTH * HEIGHT)
-#define EFFECT_TIME		20// for 20sek
+#define EFFECT_TIME		5// for 20sek
 #define FPS			50	// 50 Frame per second
 
 int width = WIDTH;
@@ -79,9 +80,9 @@ int led_count = LED_COUNT;
 
 int clear_on_exit = 0;
 
-enum effects{PLASMA, FIRE, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
+enum effects{PLASMA, FIRE, COMETRAIN, PICTURESHOW, PIXELTEST, EFFECT_COUNT};
 
-int current_effect = PLASMA;
+int current_effect = PIXELTEST;
 int effect_time_counter = EFFECT_TIME * FPS;
 
 ws2811_t ledstring =
@@ -402,6 +403,9 @@ int main(int argc, char *argv[])
 	Fire fire(WIDTH, HEIGHT, buffer);
 	fire.Init();
 
+	PixelTest pixel_test(WIDTH, HEIGHT, buffer);
+	pixel_test.Init();
+
 	while (running)
 	{
 		buffer_clear();
@@ -423,6 +427,10 @@ int main(int argc, char *argv[])
 			break;
 		case FIRE:
 			fire.Render();
+			break;
+
+		case PIXELTEST:
+			pixel_test.Render();
 			break;
 		}
 
