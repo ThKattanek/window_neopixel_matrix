@@ -71,7 +71,7 @@ static char VERSION[] = "XX.YY.ZZ";
 #define WIDTH                   25
 #define HEIGHT                  30
 #define LED_COUNT               (WIDTH * HEIGHT)
-#define EFFECT_TIME		20// for 20sek
+#define EFFECT_TIME		60*60 // for 20sek
 #define FPS			50	// 50 Frame per second
 
 int width = WIDTH;
@@ -82,7 +82,7 @@ int clear_on_exit = 0;
 
 enum effects{PIXELTEST, PLASMA, FIRE, COMETRAIN, PICTURESHOW, EFFECT_COUNT};
 
-int current_effect = PLASMA;
+int current_effect = PIXELTEST;
 int effect_time_counter = EFFECT_TIME * FPS;
 
 ws2811_t ledstring =
