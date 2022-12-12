@@ -30,6 +30,10 @@ public:
 private:
 	int xw, yw, led_count;
 	uint32_t *buffer;
+	
+	int counter;
+	uint32_t colors[3];
+	int color;
 };
 
 #endif // PIXELTEST_H
