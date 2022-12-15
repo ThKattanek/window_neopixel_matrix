@@ -31,7 +31,7 @@ private:
 	int xw, yw, led_count;
 	uint32_t *buffer;
     uint32_t *privateBuffer;
-    bool bufferWasRandomized = false;
+	bool bufferWasRandomized;
 
     void RandomizeBuffer();
 

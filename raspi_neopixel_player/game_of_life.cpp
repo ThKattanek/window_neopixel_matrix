@@ -29,9 +29,11 @@ GameOfLife::GameOfLife(int xw, int yw, uint32_t *buffer)
 	this->buffer = buffer;
     led_count = xw * yw;
 
+	bufferWasRandomized = false;
+
     privateBuffer = new uint32_t[led_count];
 
-    srand (time(NULL));
+	srand (time(NULL));
 }
 
 GameOfLife::~GameOfLife()
@@ -41,6 +43,7 @@ GameOfLife::~GameOfLife()
 
 void GameOfLife::Init()
 {
+	//bufferWasRandomized = false;
 	RandomizeBuffer();
 }
 
@@ -61,15 +64,17 @@ void GameOfLife::RandomizeBuffer()
 
 void GameOfLife::Render()
 {
+	//bufferWasRandomized ? CalcNextGeneration(yw, xw) : RandomizeBuffer();
+
 	CalcNextGeneration(yw, xw);
 
-    for(int i=0; i<led_count; i++)
-        buffer[i] = privateBuffer[i];
+	for(int i=0; i<led_count; i++)
+		buffer[i] = privateBuffer[i];
 }
 
 void GameOfLife::CalcNextGeneration(int row, int column)
 {
-    uint32_t new_playfield[(row+2) * (column+2)];
+	uint32_t new_playfield[(row+2) * (column+2)];
     for(int i=0; i<((row+2) * (column+2)); i++ ) new_playfield[i] = DEAD_CELL;
 
     for(int y=1; y<row+1; y++)
@@ -92,10 +97,11 @@ void GameOfLife::CalcNextGeneration(int row, int column)
             }
         }
 
-    for(int i=0; i<((row+2) * (column+2)); i++)
+	for(int i=0; i<((row) * (column)); i++)
     {
         privateBuffer[i] = new_playfield[i];
     }
+
 }
 
 int GameOfLife::GetCountNeighbor(uint32_t *playfield, int pitch, int x, int y)
