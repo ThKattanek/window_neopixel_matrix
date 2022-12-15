@@ -12,6 +12,7 @@
 #include "../raspi_neopixel_player/plasma.h"
 #include "../raspi_neopixel_player/cometrain.h"
 #include "../raspi_neopixel_player/fire.h"
+#include "../raspi_neopixel_player/game_of_life.h"
 #include "../raspi_neopixel_player/pixeltest.h"
 
 #define IS_RGBW false
@@ -31,7 +32,7 @@
 #define FRAME_TIMME (1000 / FPS)		// Frametime in ms
 #define EFFECT_TIME	20					// for 20sek
 
-enum effects{PIXELTEST, PLASMA, FIRE, COMETRAIN, EFFECT_COUNT};
+enum effects{PIXELTEST, PLASMA, GAMEOFLIFE, FIRE, COMETRAIN, EFFECT_COUNT};
 
 int current_effect = PIXELTEST;
 int effect_time_counter = EFFECT_TIME * FPS;
@@ -92,7 +93,6 @@ void matrix_to_leds(uint32_t* matrix)
 
 int main()
 {
-
     // todo get free sm
 	PIO pio = pio0;
 	int sm = 0;
@@ -112,6 +112,8 @@ int main()
 
 	Fire fire(WIDTH, HEIGHT, buffer);
 	fire.Init();
+
+	GameOfLife game_of_life(WIDTH, HEIGHT, buffer);
 
 	PixelTest pixel_test(WIDTH, HEIGHT, buffer);
 	pixel_test.Init();
@@ -134,6 +136,10 @@ int main()
 			fire.Render();
 			break;
 
+		case GAMEOFLIFE:
+			game_of_life.Render();
+			break;
+
 		case PIXELTEST:
 			pixel_test.Render();
 			break;
@@ -149,6 +155,28 @@ int main()
 			current_effect++;
 			if(current_effect == EFFECT_COUNT)
 				current_effect = PLASMA;
+			switch(current_effect)
+			{
+			case PLASMA:
+				plasma.Init();
+				break;
+
+			case COMETRAIN:
+				cometrain.Init();
+				break;
+
+			case FIRE:
+				fire.Init();
+				break;
+
+			case GAMEOFLIFE:
+				game_of_life.Init();
+				break;
+
+			case PIXELTEST:
+				pixel_test.Init();
+				break;
+			}
 		}
 
 		sleep_ms(20);

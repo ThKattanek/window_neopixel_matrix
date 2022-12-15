@@ -14,7 +14,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(${PROJECT_NAME}
-  main.cpp ../raspi_neopixel_player/plasma.cpp ../raspi_neopixel_player/cometrain.cpp ../raspi_neopixel_player/fire.cpp ../raspi_neopixel_player/pixeltest.cpp
+  main.cpp ../raspi_neopixel_player/plasma.cpp ../raspi_neopixel_player/cometrain.cpp ../raspi_neopixel_player/fire.cpp ../raspi_neopixel_player/game_of_life.cpp ../raspi_neopixel_player/pixeltest.cpp
 )
 
 #!!
